@@ -1,4 +1,15 @@
 #include<stdio.h>
+void display_menu(){
+    printf("*********PLEASE_SELECT**********\n");
+    printf("1. Add seminar\n2. Search seminar\n3. Update seminar\n4. Delete seminar\n0. Exit\n");
+}
+
+
+
 int main(){
-    
+    int choice;
+    while(1){
+        display_menu();
+    }
+
 }
