@@ -10,6 +10,29 @@ int main(){
     int choice;
     while(1){
         display_menu();
+        printf("Enter your choice: ");
+        scanf("%d",&choice);
+        choice = getchar();
+        swich(choice){
+            case 1: 
+                 add_seminar();
+                 break;
+            case 2:
+                 search_seminar();
+                 break;
+            case 3:
+                 update_seminar();
+                 break;
+            case 4:
+                 delete_seminar();
+                 break;
+            case 0:
+                 printf("Exis \n");
+                 return 0;
+            default:
+                 printf("Invalid choice,try again.\n");
+
+        }
     }
 
 }
