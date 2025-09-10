@@ -1,7 +1,34 @@
 #include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+char* changToData(){
+    
+}
+//เปลี่ยนเป็นการจองที่เหมาะสม
+char* clearOverData(){
+    char Data[1024];
+    if (fgets(Data,sizeof(Data),stdin) == NULL){
+        return NULL;
+    }
+    Data[strcspn(Data,"\n")] = 0;
+    char *str = malloc(strlen(Data)+1);
+    if(str == NULL){
+        return NULL;
+    } 
+    strcpy(str,Data);
+    return str;
+}
 void display_menu(){
     printf("*********PLEASE_SELECT**********\n");
     printf("1. Add seminar\n2. Search seminar\n3. Update seminar\n4. Delete seminar\n0. Exit\n");
+}
+void add_seminar(){
+    char SeminarName[100],SeminarDate[100],Participants[100],Speaker[100];
+    printf("Seminar name:\n");
+    fgets(SeminarName,sizeof(SeminarName),stdin);
+    clearOverData(SeminarName);
+
+
 }
 
 
@@ -13,7 +40,7 @@ int main(){
         printf("Enter your choice: ");
         scanf("%d",&choice);
         choice = getchar();
-        swich(choice){
+        switch(choice){
             case 1: 
                  add_seminar();
                  break;
