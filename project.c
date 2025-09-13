@@ -1,23 +1,33 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+int clearBuffer(void){
+    int ch;
+    do{
+        ch = getchar();
+    }while(ch != '\n' && ch != EOF);
+}
 
 
 //เปลี่ยนเป็นการจองที่เหมาะสม
-char* clearOverData(){
+char* Dynamic(){
     char Data[1024];
+    
     fgets(Data,sizeof(Data),stdin);
-    if (fgets(Data,sizeof(Data),stdin) == NULL){
+    
+    if (Data == NULL){
         return NULL;
     }
     //เจอปุ้บตัด
-    Data[strcspn(Data,"\n")] = 0;
-    char *save = malloc(strlen(Data)+1);
-    if(save == NULL){
-        return NULL;
-    } 
-    strcpy(save,Data);
-    return save;
+    else{
+        Data[strcspn(Data,"\n")] = 0;
+        char *save = malloc(strlen(Data)+1);
+        if(save == NULL){
+            return NULL;
+        } 
+        strcpy(save,Data);
+        return save;
+    }
 }
 void display_menu(){
     printf("*********PLEASE_SELECT**********\n");
@@ -25,48 +35,54 @@ void display_menu(){
     printf("********************************\n");
 }
 void add_seminar(){
-    char SeminarName[100],SaminarDate[100],Speaker[100];
-    int Participants;
-    FILE *file = fopen("Table.csv","a");
+    char *SeminarName ,*SeminarDate ,*Speaker ,*Participants ;
+    
+    FILE *file = fopen("celender.csv","a");
     if(file==NULL){
         printf("Can not open file.");
-        return NULL;
-    }
-    printf("Seminar name:");
-    char* SeminarName = clearOverData();
-    if(SeminarName == NULL){
-        printf("Technical Error");
-        free(SeminarName);
-        
-    }
-    printf("Date of saminar: \n");
-    char* SeminarDate = clearOverData();
-    if(SeminarDate == NULL){
-        printf("Technical Error");
-        free(SaminarDate);
-    }
-    printf("Who is speaker: ");
-    char* Speaker = clearOverData();
-    if(Speaker == NULL){
-        printf("Technical Error");
-        free(Speaker);
-    } 
-    printf("How many of participants: \n");
-    scanf("%d",&Participants);
+        }
+    else{
+        printf("Seminar name: ");
+        SeminarName = Dynamic();
+        if(SeminarName == NULL){
+            printf("Something went wrong");
+            free(SeminarName);
+            return;
+        }
+        printf("Date of saminar: ");
+        SeminarDate = Dynamic();
+        if(SeminarDate == NULL){
+            printf("Something went wrong");
+            free(SeminarDate);
+            return;
+        }
+        printf("Who is speaker: ");
+        Speaker = Dynamic();
+        if(Speaker == NULL){
+            printf("Something went wrong");
+            free(Speaker);
+            return;
+        } 
+        printf("How many of participants: ");
+        Participants = Dynamic();
+        if(Participants == NULL){
+            printf("Something went wrong");
+            free(Participants);
+            return;
+        } 
    
-    fprintf(file,"%s,%s,%d,%s",SeminarName,SaminarDate,Participants,Speaker);
-    free(SeminarName);
-    free(SaminarDate);
-    free(Speaker);
-    fclose(file);
-
-
-
-    
-    }
-
-
-
+        fprintf(file,"%s,%s,%s,%s\n", SeminarName, SeminarDate, Participants, Speaker);
+        fflush(file);
+        printf("%s %s %s %s",SeminarName, SeminarDate, Participants, Speaker);
+        fclose(file);
+        free(SeminarName);
+        free(SeminarDate);
+        free(Speaker);
+        free(Participants);
+        
+    }    
+}
+   
 
 
 
@@ -77,9 +93,10 @@ int main(){
     int choice;
     while(1){
         display_menu();
-        printf("Enter your choice: ");
-        scanf("%d",&choice);
-        //choice = getchar();
+        printf("Enter your choice(only number): ");
+        scanf("%d", &choice);
+        clearBuffer();
+        
         switch(choice){
             case 1: 
                  add_seminar();
