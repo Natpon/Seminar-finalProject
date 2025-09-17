@@ -13,11 +13,10 @@ int clearBuffer(void){
 char* Dynamic(){
     char Data[1024];
     
-    fgets(Data,sizeof(Data),stdin);
-    
-    if (Data == NULL){
+    if(fgets(Data,sizeof(Data),stdin) == NULL){
         return NULL;
     }
+    
     //เจอปุ้บตัด
     else{
         Data[strcspn(Data,"\n")] = 0;
@@ -38,6 +37,12 @@ void add_seminar(){
     char *SeminarName ,*SeminarDate ,*Speaker ,*Participants ;
     
     FILE *file = fopen("celender.csv","a");
+    FILE *file = fopen("celender.csv","a");
+if(file==NULL){
+    perror("Error opening file");
+    return;
+}
+
     if(file==NULL){
         printf("Can not open file.");
         }
