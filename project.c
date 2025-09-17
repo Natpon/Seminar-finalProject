@@ -36,7 +36,7 @@ void display_menu(){
 void add_seminar(){
     char *SeminarName ,*SeminarDate ,*Speaker ,*Participants ;
     
-    FILE *file = fopen("celender.csv","a");
+    
     FILE *file = fopen("celender.csv","a");
 if(file==NULL){
     perror("Error opening file");
