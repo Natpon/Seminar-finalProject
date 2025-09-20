@@ -29,34 +29,60 @@ char* Dynamic(){
     }
 }
 void display_menu(){
-    printf("*********PLEASE_SELECT**********\n");
+    printf("\n*********PLEASE_SELECT**********\n");
     printf("1. Add seminar\n2. Search seminar\n3. Update seminar\n4. Delete seminar\n0. Exit\n");
     printf("********************************\n");
 }
 void search_seminar(){
-    char line[100],*search;
-    printf("*************Search***************\n");
-    printf("Input date of saminar:");
-    search = Dynamic();
+    char line[1024];
+    int Detected = 0;
+    char *keyword ;
+    printf("Input your keyword:");
+    keyword = Dynamic();
     FILE *file = fopen("celender.csv","r");
     if(file == NULL){
-        printf("Can not open file");
+        printf("Error opening file");
+        return ;
     }
-    while(fgets(line,sizeof(line),file)!= NULL){
-        printf("%s",line);
+    while(fgets(line,sizeof(line),file)){
+        line[strcspn(line,"\n")] = 0 ;
+        //อ่านทั้งไฟล์
     }
-    fclose(file);
+    if(strstr(line,keyword) != NULL){
+        //printf(line);
+        Detected++ ;
+    }
+    char *SeminarName = strtok(line,",");
+    char *SeminarDate = strtok(NULL,",");
+    char *Speaker = strtok(NULL,",");
+    char *Participants = strtok(NULL,",");
+    printf("---------------------------------");
+    printf("\nResult %d:\n", Detected);
+    printf("Seminar Name : %s\n", SeminarName);
+    printf("Date         : %s\n", SeminarDate);
+    printf("Participants : %s\n", Participants);
+    printf("Speaker      : %s\n", Speaker);
+    printf("---------------------------------\n");
+    if(Detected == 0){
+        printf("No matching seminar .\n");
+    }
+    else{
+        printf("Total detected : %d result.\n",Detected);
+    }      
+    
+
+
 
 }
 void add_seminar(){
     char *SeminarName ,*SeminarDate ,*Speaker ,*Participants ;
     
     
-    //FILE *file = fopen("celender.csv","a");
-//if(file==NULL){
-   // perror("Error opening file");
-    //return;
-//}
+    FILE *file = fopen("celender.csv","a");
+if(file==NULL){
+    printf("Error opening file");
+    return;
+}
 
     
    
@@ -89,10 +115,10 @@ void add_seminar(){
             return;
         } 
    
-        //fprintf(file,"%s,%s,%s,%s\n", SeminarName, SeminarDate, Participants, Speaker);
+        fprintf(file,"%s,%s,%s,%s\n", SeminarName, SeminarDate, Participants, Speaker);
         //fflush(file); ไม่จำเป็น
         printf("###########Recorded data############\nSeminar Name is %s\nDate of Seminar is %s\nSpeaker is %s\nParticipants is %s people\n################Done################\n",SeminarName, SeminarDate, Participants, Speaker);
-        //fclose(file);
+        fclose(file);
         free(SeminarName);
         free(SeminarDate);
         free(Speaker);
