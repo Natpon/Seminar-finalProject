@@ -33,20 +33,33 @@ void display_menu(){
     printf("1. Add seminar\n2. Search seminar\n3. Update seminar\n4. Delete seminar\n0. Exit\n");
     printf("********************************\n");
 }
+void search_seminar(){
+    char line[100],*search;
+    printf("*************Search***************\n");
+    printf("Input date of saminar:");
+    search = Dynamic();
+    FILE *file = fopen("celender.csv","r");
+    if(file == NULL){
+        printf("Can not open file");
+    }
+    while(fgets(line,sizeof(line),file)!= NULL){
+        printf("%s",line);
+    }
+    fclose(file);
+
+}
 void add_seminar(){
     char *SeminarName ,*SeminarDate ,*Speaker ,*Participants ;
     
     
-    FILE *file = fopen("celender.csv","a");
-if(file==NULL){
-    perror("Error opening file");
-    return;
-}
+    //FILE *file = fopen("celender.csv","a");
+//if(file==NULL){
+   // perror("Error opening file");
+    //return;
+//}
 
-    if(file==NULL){
-        printf("Can not open file.");
-        }
-    else{
+    
+   
         printf("Seminar name: ");
         SeminarName = Dynamic();
         if(SeminarName == NULL){
@@ -76,16 +89,16 @@ if(file==NULL){
             return;
         } 
    
-        fprintf(file,"%s,%s,%s,%s\n", SeminarName, SeminarDate, Participants, Speaker);
-        fflush(file);
-        printf("%s %s %s %s",SeminarName, SeminarDate, Participants, Speaker);
-        fclose(file);
+        //fprintf(file,"%s,%s,%s,%s\n", SeminarName, SeminarDate, Participants, Speaker);
+        //fflush(file); ไม่จำเป็น
+        printf("###########Recorded data############\nSeminar Name is %s\nDate of Seminar is %s\nSpeaker is %s\nParticipants is %s people\n################Done################\n",SeminarName, SeminarDate, Participants, Speaker);
+        //fclose(file);
         free(SeminarName);
         free(SeminarDate);
         free(Speaker);
         free(Participants);
         
-    }    
+        
 }
    
 
@@ -97,6 +110,7 @@ if(file==NULL){
 int main(){
     int choice;
     while(1){
+        
         display_menu();
         printf("Enter your choice(only number): ");
         scanf("%d", &choice);
@@ -106,10 +120,10 @@ int main(){
             case 1: 
                  add_seminar();
                  break;
-            /*case 2:
+            case 2:
                  search_seminar();
                  break;
-            case 3:
+            /*case 3:
                  update_seminar();
                  break;
             case 4:
