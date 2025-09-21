@@ -1,167 +1,196 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-int clearBuffer(void){
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+int clearBuffer(void)
+{
     int ch;
-    do{
+    do
+    {
         ch = getchar();
-    }while(ch != '\n' && ch != EOF);
+    } while (ch != '\n' && ch != EOF);
 }
 
-
-//เปลี่ยนเป็นการจองที่เหมาะสม
-char* Dynamic(){
+// เปลี่ยนเป็นการจองที่เหมาะสม
+char *Dynamic()
+{
     char Data[1024];
-    
-    if(fgets(Data,sizeof(Data),stdin) == NULL){
+
+    if (fgets(Data, sizeof(Data), stdin) == NULL)
+    {
         return NULL;
     }
-    
-    //เจอปุ้บตัด
-    else{
-        Data[strcspn(Data,"\n")] = 0;
-        char *save = malloc(strlen(Data)+1);
-        if(save == NULL){
+
+    // เจอปุ้บตัด
+    else
+    {
+        Data[strcspn(Data, "\n")] = 0;
+        char *save = malloc(strlen(Data) + 1);
+        if (save == NULL)
+        {
             return NULL;
-        } 
-        strcpy(save,Data);
+        }
+        strcpy(save, Data);
         return save;
     }
 }
-void display_menu(){
+void display_menu()
+{
     printf("\n*********PLEASE_SELECT**********\n");
     printf("1. Add seminar\n2. Search seminar\n3. Update seminar\n4. Delete seminar\n0. Exit\n");
     printf("********************************\n");
 }
-void search_seminar(){
+void search_seminar()
+{
     char line[1024];
     int Detected = 0;
-    char *keyword ;
+    char *keyword;
     printf("Input your keyword:");
     keyword = Dynamic();
-    FILE *file = fopen("celender.csv","r");
-    if(file == NULL){
+    FILE *file = fopen("celender.csv", "r");
+    if (file == NULL)
+    {
         printf("Error opening file");
-        return ;
+        return;
     }
-    while(fgets(line,sizeof(line),file)){
+    /*while(fgets(line,sizeof(line),file)){
         line[strcspn(line,"\n")] = 0 ;
         //อ่านทั้งไฟล์
-    }
-    if(strstr(line,keyword) != NULL){
+        if(strstr(line,keyword) != NULL){
         //printf(line);
         Detected++ ;
-    }
-    char *SeminarName = strtok(line,",");
-    char *SeminarDate = strtok(NULL,",");
-    char *Speaker = strtok(NULL,",");
-    char *Participants = strtok(NULL,",");
-    printf("---------------------------------");
-    printf("\nResult %d:\n", Detected);
-    printf("Seminar Name : %s\n", SeminarName);
-    printf("Date         : %s\n", SeminarDate);
-    printf("Participants : %s\n", Participants);
-    printf("Speaker      : %s\n", Speaker);
-    printf("---------------------------------\n");
-    if(Detected == 0){
-        printf("No matching seminar .\n");
-    }
-    else{
-        printf("Total detected : %d result.\n",Detected);
-    }      
-    
-
-
-
-}
-void add_seminar(){
-    char *SeminarName ,*SeminarDate ,*Speaker ,*Participants ;
-    
-    
-    FILE *file = fopen("celender.csv","a");
-if(file==NULL){
-    printf("Error opening file");
-    return;
-}
-
-    
-   
-        printf("Seminar name: ");
-        SeminarName = Dynamic();
-        if(SeminarName == NULL){
-            printf("Something went wrong");
-            free(SeminarName);
-            return;
+        char *SeminarName = strtok(line,",");
+        char *SeminarDate = strtok(NULL,",");
+        char *Speaker = strtok(NULL,",");
+        char *Participants = strtok(NULL,",");
+        printf("---------------------------------");
+        printf("\nResult %d:\n", Detected);
+        printf("Seminar Name : %s\n", SeminarName);
+        printf("Date         : %s\n", SeminarDate);
+        printf("Participants : %s\n", Participants);
+        printf("Speaker      : %s\n", Speaker);
+        printf("---------------------------------\n");
         }
-        printf("Date of saminar: ");
-        SeminarDate = Dynamic();
-        if(SeminarDate == NULL){
-            printf("Something went wrong");
-            free(SeminarDate);
-            return;
+        if(Detected == 0){
+            printf("No matching seminar .\n");
         }
-        printf("Who is speaker: ");
-        Speaker = Dynamic();
-        if(Speaker == NULL){
-            printf("Something went wrong");
-            free(Speaker);
-            return;
-        } 
-        printf("How many of participants: ");
-        Participants = Dynamic();
-        if(Participants == NULL){
-            printf("Something went wrong");
-            free(Participants);
-            return;
-        } 
-   
-        fprintf(file,"%s,%s,%s,%s\n", SeminarName, SeminarDate, Participants, Speaker);
-        //fflush(file); ไม่จำเป็น
-        printf("###########Recorded data############\nSeminar Name is %s\nDate of Seminar is %s\nSpeaker is %s\nParticipants is %s people\n################Done################\n",SeminarName, SeminarDate, Participants, Speaker);
-        fclose(file);
+        else{
+            printf("Total detected : %d result.\n",Detected);
+        }
+    }*/
+    while (fgets(line, sizeof(line), file))
+    {
+        line[strcspn(line, "\n")] = 0;
+        if (strstr(line, keyword) != NULL)
+        {
+            char *SeminarName = strtok(line, ",");
+            char *SeminarDate = strtok(NULL, ",");
+            char *Speaker = strtok(NULL, ",");
+            char *Participants = strtok(NULL, ",");
+            Detected++;
+            printf("\nResult %d:\n", Detected);
+            printf("Seminar Name : %s\n", SeminarName);
+            printf("Date         : %s\n", SeminarDate);
+            printf("Participants : %s\n", Participants);
+            printf("Speaker      : %s\n", Speaker);
+            printf("---------------------------------\n");
+        }
+    }
+    if (Detected == 0)
+        {
+            printf("Keyword not found\n");
+        }
+        else
+        {
+            printf("Total detected : %d result.\n", Detected);
+            printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+        }
+}
+
+void add_seminar()
+{
+    char *SeminarName, *SeminarDate, *Speaker, *Participants;
+
+    FILE *file = fopen("celender.csv", "a");
+    if (file == NULL)
+    {
+        printf("Error opening file");
+        return;
+    }
+
+    printf("Seminar name: ");
+    SeminarName = Dynamic();
+    if (SeminarName == NULL)
+    {
+        printf("Something went wrong");
         free(SeminarName);
+        return;
+    }
+    printf("Date of saminar: ");
+    SeminarDate = Dynamic();
+    if (SeminarDate == NULL)
+    {
+        printf("Something went wrong");
         free(SeminarDate);
+        return;
+    }
+    printf("Who is speaker: ");
+    Speaker = Dynamic();
+    if (Speaker == NULL)
+    {
+        printf("Something went wrong");
         free(Speaker);
+        return;
+    }
+    printf("How many of participants: ");
+    Participants = Dynamic();
+    if (Participants == NULL)
+    {
+        printf("Something went wrong");
         free(Participants);
-        
-        
+        return;
+    }
+
+    fprintf(file, "%s,%s,%s,%s\n", SeminarName, SeminarDate, Participants, Speaker);
+    // fflush(file); ไม่จำเป็น
+    printf("###########Recorded data############\nSeminar Name is %s\nDate of Seminar is %s\nSpeaker is %s\nParticipants is %s people\n################Done################\n", SeminarName, SeminarDate, Participants, Speaker);
+    fclose(file);
+    free(SeminarName);
+    free(SeminarDate);
+    free(Speaker);
+    free(Participants);
 }
-   
 
-
-
-
-
-
-int main(){
+int main()
+{
     int choice;
-    while(1){
-        
+    while (1)
+    {
+
         display_menu();
         printf("Enter your choice(only number): ");
         scanf("%d", &choice);
         clearBuffer();
-        
-        switch(choice){
-            case 1: 
-                 add_seminar();
-                 break;
-            case 2:
-                 search_seminar();
-                 break;
-            /*case 3:
-                 update_seminar();
-                 break;
-            case 4:
-                 delete_seminar();
-                 break;*/
-            case 0:
-                 printf("Exis \n");
-                 return 0;
-            default:
-                 printf("Invalid choice,try again.\n");
+        printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 
+        switch (choice)
+        {
+        case 1:
+            add_seminar();
+            break;
+        case 2:
+            search_seminar();
+            break;
+        /*case 3:
+             update_seminar();
+             break;
+        case 4:
+             delete_seminar();
+             break;*/
+        case 0:
+            printf("Exis \n");
+            return 0;
+        default:
+            printf("Invalid choice,try again.\n");
         }
     }
-
 }
