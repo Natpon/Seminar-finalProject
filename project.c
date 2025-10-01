@@ -419,7 +419,7 @@ int home_program()
             }
             else
             {
-                printf("Pin incorrect. Returning to menu.\n");
+                printf("\033[3;31mPin incorrect.\033[3;36m Returning to menu.\033[0m\n");
             }
             break;
 
