@@ -118,12 +118,85 @@ int check_keyword_to_show(char result[100][1024], char *keyword)
     fclose(file);
     return Detected;
 }
+void update_seminar()
+{
+    char result[100][1024];
+    char *keyword;
+
+    printf("Input your keyword: ");
+    keyword = Dynamic();
+
+    int found = check_keyword_to_show(result, keyword);
+    if (found == 0)
+    {
+        printf("Nothing to update.\n");
+        free(keyword);
+        return;
+    }
+
+    int choice;
+    printf("Enter result number to update (0 = cancel): ");
+    scanf("%d", &choice);
+    clearBuffer();
+
+    if (choice <= 0 || choice > found)
+    {
+        printf("Cancel update.\n");
+        free(keyword);
+        return;
+    }
+
+    // ให้กรอกข้อมูลใหม่
+    char *SeminarName, *SeminarDate, *Participants, *Speaker;
+    printf("New Seminar name: ");
+    SeminarName = Dynamic();
+    printf("New Date: ");
+    SeminarDate = Dynamic();
+    printf("New Participants: ");
+    Participants = Dynamic();
+    printf("New Speaker: ");
+    Speaker = Dynamic();
+
+    char newLine[1024];
+    sprintf(newLine, "%s,%s,%s,%s", SeminarName, SeminarDate, Participants, Speaker);
+
+    FILE *file = fopen("celender.csv", "r");
+    FILE *temp = fopen("temp.csv", "w");
+    char line[1024];
+
+    while (fgets(line, sizeof(line), file))
+    {
+        line[strcspn(line, "\n")] = 0;
+        if (strcmp(line, results[choice - 1]) == 0)
+        {
+            fprintf(temp, "%s\n", newLine); // เขียนข้อมูลใหม่แทน
+        }
+        else
+        {
+            fprintf(temp, "%s\n", line);
+        }
+    }
+
+    fclose(file);
+    fclose(temp);
+    remove("celender.csv");
+    rename("temp.csv", "celender.csv");
+
+    printf("Result %d updated successfully.\n", choice);
+
+    free(SeminarName);
+    free(SeminarDate);
+    free(Participants);
+    free(Speaker);
+    free(keyword);
+}
+
 void delete_seminar()
 {
     char *keyword;
     char result[100][1024];
 
-    printf("----------------Delete Seminar----------------------");
+    printf("----------------Delete Seminar----------------------\n");
     printf("Input your keyword :");
     keyword = Dynamic();
     int found = check_keyword_to_show(result, keyword);
@@ -298,14 +371,15 @@ int home_program()
             if (confirm())
             {
                 int pined;
-              do
+
+                do
                 {
                     add_seminar();
-                    printf("Add again (Pin \033[1;36m1\033[0m)");
-                    
-                    scanf(" %d", &pined);
-                    clearBuffer ();
-                } while (pined == 1); 
+                    printf("Add again? (Pin \033[1;36m1\033[0m = yes, other = no): ");
+                    scanf("%d", &pined);
+                    clearBuffer();
+
+                } while (pined == 1);
             }
             else
             {
@@ -316,9 +390,9 @@ int home_program()
         case 2:
             search_seminar();
             break;
-        /*case 3:
+        case 3:
              update_seminar();
-             break;*/
+             break;
         case 4:
             delete_seminar();
             break;
