@@ -211,10 +211,9 @@ void delete_seminar()
     char input[200];
     int choices[50], nChoices = 0;
 
-    printf("Enter result \033[1;33mnumbers\033[0m to delete (ex: 1 3 5, 0 = cancel): ");
+    printf("Enter result \033[1;33mnumbers\033[0m to delete\n\033[3;31mFormat\033[0m \n\033[1;35m||\033[0mIf select only one(ex:\033[1;33m1\033[0m)\n\033[1;35m||\033[0mIf select more than one(ex: \033[1;33m1 3 5\033[0m)\n\033[1;35m||\033[0mIf you do not want to delete pin : (\033[1;33m0\033[0m)\n\033[1;31m!!\033[0m!Pin accotding to the format mentioned:");
     fgets(input, sizeof(input), stdin);
 
-    // แยกตัวเลขที่ผู้ใช้กรอก
     char *token = strtok(input, " ");
     while (token != NULL)
     {
