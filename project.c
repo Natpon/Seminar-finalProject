@@ -2,40 +2,36 @@
 #include <stdlib.h>
 #include <string.h>
 // #include "unit_test.c"
-
-/*void show_all_seminars(void) {
+void show_all_seminars(void) {
     char line[1024];
-    FILE *file = fopen("celender.csv","r");
+
+    FILE *file = fopen("celender.csv", "r");
     if (!file) {
-        printf("ไม่สามารถเปิดไฟล์ได้\n");
+        printf("Can not open file\n");
         return;
     }
 
-    // ข้าม header
-    fgets(line, sizeof(line), file);
+    printf("\033[1;33m==============================================\033[0m\n");
+    printf("\033[1;32m%-25s %-12s %-10s %-15s\033[0m\n", "Seminar Name", "Date", "Participants", "Speaker");
+    printf("\033[1;33m==============================================\033[0m\n");
 
     while (fgets(line, sizeof(line), file)) {
-        line[strcspn(line, "\n")] = 0; // ลบ \n ทิ้ง
-
-        // แยก field ด้วย ,
+        line[strcspn(line, "\n")] = 0; 
         char *SeminarName   = strtok(line, ",");
         char *SeminarDate   = strtok(NULL, ",");
         char *Participants  = strtok(NULL, ",");
         char *Speaker       = strtok(NULL, ",");
 
         if (SeminarName && SeminarDate && Participants && Speaker) {
-            printf("%-25s %-12s %-10s %-15s\n",
-                   SeminarName, SeminarDate, Participants, Speaker);
+            // แสดงข้อมูลปกติ
+            printf("%-25s %-12s %-10s %-15s\n", SeminarName, SeminarDate, Participants, Speaker);
         }
     }
 
     fclose(file);
-    printf("=============================================\n");
-}*/
-void show_all_seminars()
-{
-    printf("Hi");
+    printf("\033[1;33m==============================================\033[0m\n");
 }
+
 
 int clearBuffer(void)
 {
@@ -93,7 +89,6 @@ int check_keyword_to_show(char result[100][1024], char *keyword)
         {
             strcpy(result[Detected], line);
 
-            // แยก field เพื่อแสดง
             char temp[1024];
             strcpy(temp, line); // strtok จะทำลาย string เราใช้สำรอง
             char *SeminarName = strtok(temp, ",");
