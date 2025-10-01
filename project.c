@@ -102,12 +102,12 @@ int check_keyword_to_show(char result[100][1024], char *keyword)
             char *Speaker = strtok(NULL, ",");
 
             ++Detected;
-            printf("Result %d:\n", Detected);
+            printf("Result \033[1;33m%d\033[0m:\n", Detected);
             printf("  Seminar Name : %s\n", SeminarName);
             printf("  Date         : %s\n", SeminarDate);
             printf("  Participants : %s\n", Participants);
             printf("  Speaker      : %s\n", Speaker);
-            printf("---------------------------------\n");
+            printf("\033[35m---------------------------------\n\033[0m");
         }
     }
 
@@ -135,7 +135,7 @@ void update_seminar()
     }
 
     int choice;
-    printf("Enter result number to update (0 = cancel): ");
+    printf("Enter result \033[1;33mnumber\033[0m to update (\033[1;33m0\033[0m = cancel): ");
     scanf("%d", &choice);
     clearBuffer();
 
@@ -167,7 +167,7 @@ void update_seminar()
     while (fgets(line, sizeof(line), file))
     {
         line[strcspn(line, "\n")] = 0;
-        if (strcmp(line, results[choice - 1]) == 0)
+        if (strcmp(line, result[choice - 1]) == 0)
         {
             fprintf(temp, "%s\n", newLine); // เขียนข้อมูลใหม่แทน
         }
@@ -196,19 +196,44 @@ void delete_seminar()
     char *keyword;
     char result[100][1024];
 
-    printf("----------------Delete Seminar----------------------\n");
-    printf("Input your keyword :");
+    printf("------------------\033[31mDelete Seminar\033[0m----------------------\n");
+    printf("Input your keyword : ");
     keyword = Dynamic();
+
     int found = check_keyword_to_show(result, keyword);
 
-    int choice;
-    printf("Enter result number to delete (0 = cancel): ");
-    scanf("%d", &choice);
-    clearBuffer();
-
-    if (choice <= 0 || choice > found)
+    if (found == 0)
     {
-        printf("Cancel delete.\n");
+        printf("No seminar found with keyword '%s'\n", keyword);
+        return;
+    }
+
+    char input[200];
+    int choices[50], nChoices = 0;
+
+    printf("Enter result \033[1;33mnumbers\033[0m to delete (ex: 1 3 5, 0 = cancel): ");
+    fgets(input, sizeof(input), stdin);
+
+    // แยกตัวเลขที่ผู้ใช้กรอก
+    char *token = strtok(input, " ");
+    while (token != NULL)
+    {
+        int num = atoi(token);
+        if (num == 0)
+        {
+            printf("Cancel delete.\n");
+            return;
+        }
+        if (num > 0 && num <= found)
+        {
+            choices[nChoices++] = num;
+        }
+        token = strtok(NULL, " ");
+    }
+
+    if (nChoices == 0)
+    {
+        printf("No valid numbers entered.\n");
         return;
     }
 
@@ -223,16 +248,28 @@ void delete_seminar()
         printf("Error opening file\n");
         return;
     }
+
     while (fgets(line, sizeof(line), file))
     {
         line[strcspn(line, "\n")] = 0;
-        if (strcmp(line, result[choice - 1]) != 0)
+
+        int shouldDelete = 0;
+        for (int i = 0; i < nChoices; i++)
         {
-            fprintf(temp, "%s\n", line);
+            if (strcmp(line, result[choices[i] - 1]) == 0)
+            {
+                shouldDelete = 1;
+                break;
+            }
+        }
+
+        if (!shouldDelete)
+        {
+            fprintf(temp, "%s\n", line); // เก็บที่ไม่ลบ
         }
         else
         {
-            fprintf(backup, "%s\n", line);
+            fprintf(backup, "%s\n", line); // เก็บเฉพาะที่ถูกลบไว้ backup
         }
     }
 
@@ -243,7 +280,7 @@ void delete_seminar()
     remove("celender.csv");
     rename("temp.csv", "celender.csv");
 
-    printf("Result %d deleted successfully. Backup saved ", choice);
+    printf("Deleted %d seminar(s) successfully. Backup saved.\n", nChoices);
 }
 
 void Show_search()
@@ -330,7 +367,7 @@ void add_seminar()
 
     fprintf(file, "%s,%s,%s,%s\n", SeminarName, SeminarDate, Participants, Speaker);
     // fflush(file); ไม่จำเป็น
-    printf("\033[1;33m===========\033[1;32mRecorded data\033[1;33m===========\033[0m\nSeminar Name is \33[1;32m%s\033[0m\nDate of Seminar is \033[1;32m%s\033[0m\nSpeaker is \033[1;32m%s\033[0m\nParticipants is \033[1;32m%s\033[0m people\n\033[1;33m=============\033[1;32mDone\033[1;33m==============\033[0m\n", SeminarName, SeminarDate, Participants, Speaker);
+    printf("\033[1;33m===========\033[1;32mRecorded data\033[1;33m===========\033[0m\nSeminar Name is \33[1;32m%s\033[0m\nDate of Seminar is \033[1;32m%s\033[0m\nSpeaker is \033[1;32m%s\033[0m\nParticipants is \033[1;32m%s\033[0m people\n\033[1;33m=============\033[1;32mDone\033[1;33m==============\033[0m\n", SeminarName, SeminarDate, Speaker, Participants);
     fclose(file);
     free(SeminarName);
     free(SeminarDate);
@@ -391,8 +428,8 @@ int home_program()
             search_seminar();
             break;
         case 3:
-             update_seminar();
-             break;
+            update_seminar();
+            break;
         case 4:
             delete_seminar();
             break;
