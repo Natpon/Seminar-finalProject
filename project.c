@@ -316,7 +316,9 @@ void search_seminar()
         printf("Incorrect format");
     }
 }
-// 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+void Format_Date(){
+    printf("\033[3;32mInput year is Christian Era (YYYY-MM-DD)\nExample:\033[3;33m2025-10-02\033[0m\n");
+}
 void add_seminar()
 {
     char *SeminarName, *SeminarDate, *Speaker, *Participants;
@@ -339,7 +341,8 @@ void add_seminar()
         free(SeminarName);
         return;
     }
-    printf("Date of saminar: ");
+    Format_Date();
+    printf("Date of saminar : ");
     SeminarDate = Dynamic();
     if (SeminarDate == NULL)
     {
@@ -421,6 +424,7 @@ int home_program()
             {
                 printf("\033[3;31mPin incorrect.\033[3;36m Returning to menu.\033[0m\n");
             }
+            printf("\033[3;34mBye,Go back to menu\033[0m");
             break;
 
         case 2:
