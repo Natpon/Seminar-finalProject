@@ -89,3 +89,81 @@
 | Backup / System Control       | ✅    | ❌        | ❌      | ❌          | ❌     |
 
 ---
+
+
+## 💻 Seminar Management System - Code Workflow with Access Level
+
+### Legend
+- 🔴 Admin / Organizer  
+- 🟢 Speaker  
+- 🟡 Participant  
+- ⚪ Viewer  
+
+```mermaid
+flowchart TD
+    Start([Start Program]) --> Home([Menu Loop])
+
+    %% Add Seminar
+    Home -->|Option 1| AddSeminar([Add Seminar])
+    AddSeminar --> RoleCheckAdd{User Role?}
+    RoleCheckAdd -->|Admin / Organizer| ConfirmAdd([Confirm Add Seminar])
+    RoleCheckAdd -->|Speaker| DeniedSpeakerAdd([Access Denied])
+    RoleCheckAdd -->|Participant| DeniedParticipantAdd([Access Denied])
+    RoleCheckAdd -->|Viewer| DeniedViewerAdd([Access Denied])
+    ConfirmAdd --> Home
+    DeniedSpeakerAdd --> Home
+    DeniedParticipantAdd --> Home
+    DeniedViewerAdd --> Home
+
+    %% Search Seminar
+    Home -->|Option 2| Search([Search Seminar])
+    Search --> RoleCheckSearch{User Role?}
+    RoleCheckSearch -->|All Roles| ShowOption([Show All or Search Keyword])
+    ShowOption -->|All| ShowAll([Show All Seminars])
+    ShowOption -->|Keyword| KeywordSearch([Search Keyword])
+    ShowAll --> Home
+    KeywordSearch --> Home
+
+    %% Update Seminar
+    Home -->|Option 3| Update([Update Seminar])
+    Update --> RoleCheckUpdate{User Role?}
+    RoleCheckUpdate -->|Admin / Organizer| KeywordUpdate([Search Keyword to Update])
+    RoleCheckUpdate -->|Speaker| DeniedSpeakerUpdate([Access Denied])
+    RoleCheckUpdate -->|Participant| DeniedParticipantUpdate([Access Denied])
+    RoleCheckUpdate -->|Viewer| DeniedViewerUpdate([Access Denied])
+    KeywordUpdate --> SelectUpdate([Select Result Number])
+    SelectUpdate --> EditData([Input New Seminar Data])
+    EditData --> SaveUpdate([Save to temp.csv → Replace celender.csv])
+    SaveUpdate --> Home
+    DeniedSpeakerUpdate --> Home
+    DeniedParticipantUpdate --> Home
+    DeniedViewerUpdate --> Home
+
+    %% Delete Seminar
+    Home -->|Option 4| Delete([Delete Seminar])
+    Delete --> RoleCheckDelete{User Role?}
+    RoleCheckDelete -->|Admin / Organizer| KeywordDelete([Search Keyword to Delete])
+    RoleCheckDelete -->|Speaker| DeniedSpeakerDelete([Access Denied])
+    RoleCheckDelete -->|Participant| DeniedParticipantDelete([Access Denied])
+    RoleCheckDelete -->|Viewer| DeniedViewerDelete([Access Denied])
+    KeywordDelete --> SelectDelete([Select Result Numbers])
+    SelectDelete --> BackupDelete([Backup Deleted Data])
+    BackupDelete --> UpdateCSV([Save to temp.csv → Replace celender.csv])
+    UpdateCSV --> Home
+    DeniedSpeakerDelete --> Home
+    DeniedParticipantDelete --> Home
+    DeniedViewerDelete --> Home
+
+    %% Exit
+    Home -->|Option 0| Exit([Exit Program])
+
+    %% Styling Role
+    class ConfirmAdd,KeywordUpdate,SelectUpdate,EditData,SaveUpdate,KeywordDelete,SelectDelete,BackupDelete,UpdateCSV AdminOrOrganizer
+    class DeniedSpeakerAdd,DeniedSpeakerUpdate,DeniedSpeakerDelete Speaker
+    class DeniedParticipantAdd,DeniedParticipantUpdate,DeniedParticipantDelete Participant
+    class DeniedViewerAdd,DeniedViewerUpdate,DeniedViewerDelete Viewer
+
+    classDef AdminOrOrganizer fill:#f88,stroke:#333,stroke-width:1px,color:#000
+    classDef Speaker fill:#8f8,stroke:#333,stroke-width:1px,color:#000
+    classDef Participant fill:#ff8,stroke:#333,stroke-width:1px,color:#000
+    classDef Viewer fill:#eee,stroke:#333,stroke-width:1px,color:#000
