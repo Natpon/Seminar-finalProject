@@ -308,7 +308,7 @@ void search_seminar()
     }
     else
     {
-        printf("Incorrect format");
+        printf("\033[3;31mIncorrect format\033[0m");
     }
 }
 void Format_Date(){
