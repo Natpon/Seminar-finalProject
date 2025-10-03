@@ -5,7 +5,7 @@
 void show_all_seminars(void) {
     char line[1024];
 
-    FILE *file = fopen("celender.csv", "r");
+    FILE *file = fopen("project_oldVersion/celender_oldVersion.csv", "r");
     if (!file) {
         printf("Can not open file\n");
         return;
@@ -75,7 +75,7 @@ int check_keyword_to_show(char result[100][1024], char *keyword)
 {
     int Detected = 0;
     char line[1024];
-    FILE *file = fopen("celender.csv", "r");
+    FILE *file = fopen("celender_oldVersion.csv", "r");
     if (file == NULL)
     {
         printf("Error opening file\n");
@@ -320,7 +320,7 @@ void add_seminar()
 
     int choice;
 
-    FILE *file = fopen("celender.csv", "a");
+    FILE *file = fopen("celender_oldVersion.csv", "a");
 
     if (file == NULL)
     {
