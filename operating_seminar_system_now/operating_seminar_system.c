@@ -1,15 +1,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 typedef struct
 {
     char *username;
     char *role;
 } User;
+typedef struct
+{
+    char *SeminarName;
+    char *SeminarDate;    // YYYY-MM-DD
+    char *Participants;
+    char *Speaker;
+    char *StartTime;      // HH:MM
+    char *EndTime;        // HH:MM
+    char *room;
+} Seminar;
 
-#define USER_FILE "user.csv"
+#define USER_FILE "operating_seminar_system_now/user.csv"
+#define SEMINAR_FILE "operating_seminar_system_now/seminar.csv"
+const char *ROOMS[5] = {"Room A", "Room B", "Room C", "Room D", "Room E"};
+//ไม่สามารถแก้ไขห้องได้
 
+
+ อ
 // ฟังก์ชันช่วยอ่าน string จาก stdin แบบ dynamic
 char *Dynamic_stdin()
 {
@@ -28,6 +44,122 @@ int clearBuffer(void)
     while ((ch = getchar()) != '\n' && ch != EOF)
         ;
     return 0;
+}
+
+int timeToMinutes(const char *timeStr) {
+    int h, m;
+    sscanf(timeStr, "%d:%d", &h, &m);
+    return h * 60 + m;
+}
+int checkRoomAvailability(const char *room, const char *date, const char *startTime, const char *endTime) {
+    FILE *file = fopen(SEMINAR_FILE, "r");
+    if (!file) return 1; // ถ้าไม่มีไฟล์ ห้องถือว่าว่าง
+
+    char line[256];
+    while (fgets(line, sizeof(line), file)) {
+        line[strcspn(line, "\n")] = 0;
+        char *sName = strtok(line, ",");
+        char *sSpeaker = strtok(NULL, ",");
+        char *sDate = strtok(NULL, ",");
+        char *sStart = strtok(NULL, ",");
+        char *sEnd = strtok(NULL, ",");
+        char *sRoom = strtok(NULL, ",");
+
+        if (!sName || !sSpeaker || !sDate || !sStart || !sEnd || !sRoom) continue;
+
+        if (strcmp(room, sRoom) == 0 && strcmp(date, sDate) == 0) {
+            int sStartMin = timeToMinutes(sStart);
+            int sEndMin = timeToMinutes(sEnd);
+            int newStartMin = timeToMinutes(startTime);
+            int newEndMin = timeToMinutes(endTime);
+
+            if (!(newEndMin <= sStartMin || newStartMin >= sEndMin)) {
+                fclose(file);
+                return 0; // ทับซ้อน
+            }
+        }
+    }
+
+    fclose(file);
+    return 1; // ห้องว่าง
+}
+
+void addSeminar() {
+    Seminar input;
+    FILE *file = fopen(SEMINAR_FILE, "a");
+    if (!file) {
+        printf("Cannot open seminar.csv\n");
+        return;
+    }
+
+    printf("Seminar name: ");
+    input.SeminarName = Dynamic_stdin();
+
+    printf("Speaker: ");
+    input.Speaker = Dynamic_stdin();
+
+    printf("Date (YYYY-MM-DD): ");
+    input.SeminarDate = Dynamic_stdin();
+
+    printf("Start Time (HH:MM): ");
+    input.StartTime = Dynamic_stdin();
+
+    printf("End Time (HH:MM): ");
+    input.EndTime = Dynamic_stdin();
+
+    // เลือกห้อง
+    int roomChoice;
+    do {
+        printf("Select Room:\n");
+        for (int i = 0; i < 5; i++)
+            printf("%d. %s\n", i + 1, ROOMS[i]);
+        scanf("%d", &roomChoice);
+        clearBuffer();
+
+        if (roomChoice < 1 || roomChoice > 5) {
+            printf("Invalid room choice! Try again.\n");
+            continue;
+        }
+
+        input.room = (char*)ROOMS[roomChoice - 1];
+
+        if (!checkRoomAvailability(input.room, input.SeminarDate, input.StartTime, input.EndTime)) {
+            printf("Room %s is already booked at this time. Choose another.\n", input.room);
+            roomChoice = 0;
+        }
+
+    } while (roomChoice < 1 || roomChoice > 5);
+
+    // จำนวนผู้เข้าร่วม
+    int participants;
+    do {
+        printf("Number of participants: ");
+        if (scanf("%d", &participants) != 1 || participants < 0) {
+            printf("Invalid number! Try again.\n");
+            clearBuffer();
+            continue;
+        }
+        clearBuffer();
+        break;
+    } while (1);
+
+    // บันทึกลง CSV
+    fprintf(file, "%s,%s,%s,%s,%s,%s,%d\n",
+            input.SeminarName, input.Speaker, input.SeminarDate,
+            input.StartTime, input.EndTime, input.room, participants);
+    fclose(file);
+
+    printf("\n=== Seminar Added ===\n");
+    printf("Name: %s\nSpeaker: %s\nDate: %s\nTime: %s - %s\nRoom: %s\nParticipants: %d\n",
+           input.SeminarName, input.Speaker, input.SeminarDate, input.StartTime, input.EndTime,
+           input.room, participants);
+
+    // free memory
+    free(input.SeminarName);
+    free(input.Speaker);
+    free(input.SeminarDate);
+    free(input.StartTime);
+    free(input.EndTime);
 }
 
 // ฟังก์ชัน login แบบอ่านจาก user.csv
@@ -81,11 +213,11 @@ void removeUser() { printf("[Dummy] Remove User called\n"); }
 void editUser() { printf("[Dummy] Edit User called\n"); }
 void ViewbackupData() { printf("[Dummy] Backup Data called\n"); }
 void restoreData() { printf("[Dummy] Restore Data called\n"); }
-void addSeminar() { printf("[Dummy] Add Seminar called\n"); }
+
 void searchSeminar() { printf("[Dummy] Search Seminar called\n"); }
 void updateSeminar() { printf("[Dummy] Update Seminar called\n"); }
 void deleteSeminar() { printf("[Dummy] Delete Seminar called\n"); }
-void manageSeminar() { printf("[Dummy] Manage Seminar called\n"); }
+
 void approveParticipants() { printf("[Dummy] Approve Participants called\n"); }
 void viewMySeminars() { printf("[Dummy] View My Seminars called\n"); }
 void uploadSlides() { printf("[Dummy] Upload Slides called\n"); }
@@ -94,6 +226,43 @@ void viewSchedule() { printf("[Dummy] View Schedule called\n"); }
 void giveFeedback() { printf("[Dummy] Give Feedback called\n"); }
 
 // ================== Menu ตาม Role ======================
+void manageSeminar() { 
+    int choice;
+    while (1)
+    {
+        printf("\nSeminar Management:\n1. Add Seminar\n2. Search Seminar\n3. Update Seminar\n4. Delete Seminar\n0. Back to main menu\nChoice: ");
+        scanf("%d", &choice);
+        clearBuffer();
+        if (choice == 1 || choice == 2 || choice == 3 || choice == 4 || choice == 0)
+        {
+            switch (choice)
+            {
+            case 1:
+                addSeminar();
+                break;
+            case 2:
+                searchSeminar();
+                break;
+            case 3:
+                updateSeminar();
+                break;
+            case 4:
+                deleteSeminar();
+                break;
+            case 0:
+                return;
+            default:
+                printf("Invalid choice.\n");
+                break;
+            }
+        }
+        else
+        {
+            printf("Invalid choice. Please try again.\n");
+            continue;
+        }
+    }
+}
 void showMenu(User *user)
 {
     int choice;
@@ -156,7 +325,7 @@ void showMenu(User *user)
         }
         else if (strcmp(user->role, "Organizer") == 0)
         {
-            printf("1. Manage Seminar\n2. Approve Participants\n3. Search Seminar\n0. Exit\nChoice: ");
+            printf("1. Manage Seminar\n2. Approve Participants\n3. View schedule\n0. Exit\nChoice: ");
             scanf("%d", &choice);
             clearBuffer();
             if (choice == 1 || choice == 2 || choice == 3 || choice == 0)
@@ -170,7 +339,7 @@ void showMenu(User *user)
                     approveParticipants();
                     break;
                 case 3:
-                    searchSeminar();
+                    viewSchedule();
                     break;
                 case 0:
                     return;
@@ -277,7 +446,8 @@ void showMenu(User *user)
     }
 }
 
-// ================== Main =============================
+// ================== int =============================
+
 int main()
 {
     User currentUser;
@@ -295,26 +465,5 @@ int main()
 
     printf("Goodbye!\n");
     return 0;
-    /*while (1)
-    {
-
-        char *username, *role, *password;
-        FILE *file = fopen("operating_seminar_system_now/user.csv", "a");
-        if (file == NULL)
-        {
-            printf("Error opening file\n");
-            return 1;
-        }
-        printf("Enter username: ");
-        username = Dynamic_stdin();
-        printf("Enter role (Admin, Organizer, Speaker, Participant, Viewer): ");
-        role = Dynamic_stdin();
-        printf("Enter password: ");
-        password = Dynamic_stdin();
-        fprintf(file, "%s,%s,%s \n", username, password, role);
-        fclose(file);
-        free(username);
-        free(role);
-        free(password);
-    }*/
+    
 }
