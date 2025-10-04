@@ -76,6 +76,11 @@ int login(User *user)
 }
 
 // ================== Dummy Functions ===================
+void addUser() { printf("[Dummy] Add User called\n"); }
+void removeUser() { printf("[Dummy] Remove User called\n"); }
+void editUser() { printf("[Dummy] Edit User called\n"); }
+void ViewbackupData() { printf("[Dummy] Backup Data called\n"); }
+void restoreData() { printf("[Dummy] Restore Data called\n"); }
 void addSeminar() { printf("[Dummy] Add Seminar called\n"); }
 void searchSeminar() { printf("[Dummy] Search Seminar called\n"); }
 void updateSeminar() { printf("[Dummy] Update Seminar called\n"); }
@@ -97,7 +102,7 @@ void showMenu(User *user)
         printf("\nLogged in as %s (%s)\n", user->username, user->role);
         if (strcmp(user->role, "Admin") == 0)
         {
-            printf("1. Add Seminar\n2. Search Seminar\n3. Update Seminar\n4. Delete Seminar\n0. Exit\nChoice: ");
+            printf("1. User Management\n2. Data Backup/Restore\n3. View schedule\n4. View Feedback\n0. Exit\nChoice: ");
             scanf("%d", &choice);
             clearBuffer();
             if (choice == 1 || choice == 2 || choice == 3 || choice == 4 || choice == 0)
@@ -105,16 +110,36 @@ void showMenu(User *user)
                 switch (choice)
                 {
                 case 1:
-                    addSeminar();
+                    printf("1. Add User\n2. Remove User\n3. Edit User\nChoice: ");
+                    int userChoice;
+                    scanf("%d", &userChoice);
+                    clearBuffer();
+                    if (userChoice == 1)
+                        addUser();
+                    else if (userChoice == 2)
+                        removeUser();
+                    else if (userChoice == 3)
+                        editUser();
+                    else
+                        printf("Invalid choice.\n");
                     break;
                 case 2:
-                    searchSeminar();
+                    printf("1.View Backup Data\n2. Restore Data\nChoice: ");
+                    int dataChoice;
+                    scanf("%d", &dataChoice);
+                    clearBuffer();
+                    if (dataChoice == 1)
+                        ViewbackupData();
+                    else if (dataChoice == 2)
+                        restoreData();
+                    else
+                        printf("Invalid choice.\n");
                     break;
                 case 3:
-                    updateSeminar();
+                    viewSchedule();
                     break;
                 case 4:
-                    deleteSeminar();
+                    viewFeedback();
                     break;
                 case 0:
                     return;
