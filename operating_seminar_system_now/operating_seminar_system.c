@@ -100,25 +100,33 @@ void showMenu(User *user)
             printf("1. Add Seminar\n2. Search Seminar\n3. Update Seminar\n4. Delete Seminar\n0. Exit\nChoice: ");
             scanf("%d", &choice);
             clearBuffer();
-            switch (choice)
+            if (choice == 1 || choice == 2 || choice == 3 || choice == 4 || choice == 0)
             {
-            case 1:
-                addSeminar();
-                break;
-            case 2:
-                searchSeminar();
-                break;
-            case 3:
-                updateSeminar();
-                break;
-            case 4:
-                deleteSeminar();
-                break;
-            case 0:
-                return;
-            default:
-                printf("Invalid choice.\n");
-                break;
+                switch (choice)
+                {
+                case 1:
+                    addSeminar();
+                    break;
+                case 2:
+                    searchSeminar();
+                    break;
+                case 3:
+                    updateSeminar();
+                    break;
+                case 4:
+                    deleteSeminar();
+                    break;
+                case 0:
+                    return;
+                default:
+                    printf("Invalid choice.\n");
+                    break;
+                }
+            }
+            else
+            {
+                printf("Invalid choice. Please try again.\n");
+                continue;
             }
         }
         else if (strcmp(user->role, "Organizer") == 0)
@@ -126,22 +134,30 @@ void showMenu(User *user)
             printf("1. Manage Seminar\n2. Approve Participants\n3. Search Seminar\n0. Exit\nChoice: ");
             scanf("%d", &choice);
             clearBuffer();
-            switch (choice)
+            if (choice == 1 || choice == 2 || choice == 3 || choice == 0)
             {
-            case 1:
-                manageSeminar();
-                break;
-            case 2:
-                approveParticipants();
-                break;
-            case 3:
-                searchSeminar();
-                break;
-            case 0:
-                return;
-            default:
-                printf("Invalid choice.\n");
-                break;
+                switch (choice)
+                {
+                case 1:
+                    manageSeminar();
+                    break;
+                case 2:
+                    approveParticipants();
+                    break;
+                case 3:
+                    searchSeminar();
+                    break;
+                case 0:
+                    return;
+                default:
+                    printf("Invalid choice.\n");
+                    break;
+                }
+            }
+            else
+            {
+                printf("Invalid choice. Please try again.\n");
+                continue;
             }
         }
         else if (strcmp(user->role, "Speaker") == 0)
@@ -149,22 +165,30 @@ void showMenu(User *user)
             printf("1. View My Seminars\n2. Upload Slides\n3. View Feedback\n0. Exit\nChoice: ");
             scanf("%d", &choice);
             clearBuffer();
-            switch (choice)
+            if (choice == 1 || choice == 2 || choice == 3 || choice == 0)
             {
-            case 1:
-                viewMySeminars();
-                break;
-            case 2:
-                uploadSlides();
-                break;
-            case 3:
-                viewFeedback();
-                break;
-            case 0:
-                return;
-            default:
-                printf("Invalid choice.\n");
-                break;
+                switch (choice)
+                {
+                case 1:
+                    viewMySeminars();
+                    break;
+                case 2:
+                    uploadSlides();
+                    break;
+                case 3:
+                    viewFeedback();
+                    break;
+                case 0:
+                    return;
+                default:
+                    printf("Invalid choice.\n");
+                    break;
+                }
+            }
+            else
+            {
+                printf("Invalid choice. Please try again.\n");
+                continue;
             }
         }
         else if (strcmp(user->role, "Participant") == 0)
@@ -172,19 +196,27 @@ void showMenu(User *user)
             printf("1. View Schedule\n2. Give Feedback\n0. Exit\nChoice: ");
             scanf("%d", &choice);
             clearBuffer();
-            switch (choice)
+            if (choice == 1 || choice == 2 || choice == 0)
             {
-            case 1:
-                viewSchedule();
-                break;
-            case 2:
-                giveFeedback();
-                break;
-            case 0:
-                return;
-            default:
-                printf("Invalid choice.\n");
-                break;
+                switch (choice)
+                {
+                case 1:
+                    viewSchedule();
+                    break;
+                case 2:
+                    giveFeedback();
+                    break;
+                case 0:
+                    return;
+                default:
+                    printf("Invalid choice.\n");
+                    break;
+                }
+            }
+            else
+            {
+                printf("Invalid choice. Please try again.\n");
+                continue;
             }
         }
         else if (strcmp(user->role, "Viewer") == 0)
@@ -192,16 +224,24 @@ void showMenu(User *user)
             printf("1. View Schedule\n0. Exit\nChoice: ");
             scanf("%d", &choice);
             clearBuffer();
-            switch (choice)
+            if (choice == 1 || choice == 0)
             {
-            case 1:
-                viewSchedule();
-                break;
-            case 0:
-                return;
-            default:
-                printf("Invalid choice.\n");
-                break;
+                switch (choice)
+                {
+                case 1:
+                    viewSchedule();
+                    break;
+                case 0:
+                    return;
+                default:
+                    printf("Invalid choice.\n");
+                    break;
+                }
+            }
+            else
+            {
+                printf("Invalid choice. Please try again.\n");
+                continue;
             }
         }
         else
@@ -215,8 +255,9 @@ void showMenu(User *user)
 // ================== Main =============================
 int main()
 {
-    /*User currentUser;
-    if (!login(&currentUser)) {
+    User currentUser;
+    if (!login(&currentUser))
+    {
         printf("Login failed. Exiting...\n");
         return 0;
     }
@@ -228,8 +269,8 @@ int main()
     free(currentUser.role);
 
     printf("Goodbye!\n");
-    return 0;*/
-    while (1)
+    return 0;
+    /*while (1)
     {
 
         char *username, *role, *password;
@@ -250,5 +291,5 @@ int main()
         free(username);
         free(role);
         free(password);
-    }
+    }*/
 }
