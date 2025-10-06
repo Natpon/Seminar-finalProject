@@ -1,37 +1,43 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-// #include "unit_test.c"
-void show_all_seminars(void) {
-    char line[1024];
+#define CELENDER_FILE "celender_oldVersion.csv"
+#define UNIT_TEST_FILE "unit_test_oldVersion.c" 
+#include "project_oldVersion.h"
+//  #include "unit_test.c"
+void show_all_seminars(void)
+{
+        char line[1024];
 
-    FILE *file = fopen("project_oldVersion/celender_oldVersion.csv", "r");
-    if (!file) {
-        printf("Can not open file\n");
-        return;
-    }
-
-    printf("\033[1;33m==============================================\033[0m\n");
-    printf("\033[1;32m%-25s %-12s %-10s %-15s\033[0m\n", "Seminar Name", "Date", "Participants", "Speaker");
-    printf("\033[1;33m==============================================\033[0m\n");
-
-    while (fgets(line, sizeof(line), file)) {
-        line[strcspn(line, "\n")] = 0; 
-        char *SeminarName   = strtok(line, ",");
-        char *SeminarDate   = strtok(NULL, ",");
-        char *Participants  = strtok(NULL, ",");
-        char *Speaker       = strtok(NULL, ",");
-
-        if (SeminarName && SeminarDate && Participants && Speaker) {
-            // แสดงข้อมูลปกติ
-            printf("%-25s %-12s %-10s %-15s\n", SeminarName, SeminarDate, Participants, Speaker);
+        FILE *file = fopen(CELENDER_FILE, "r");
+        if (!file)
+        {
+            printf("Can not open file\n");
+            return;
         }
-    }
 
-    fclose(file);
-    printf("\033[1;33m==============================================\033[0m\n");
+        printf("\033[1;33m==============================================\033[0m\n");
+        printf("\033[1;32m%-25s %-12s %-10s %-15s\033[0m\n", "Seminar Name", "Date", "Participants", "Speaker");
+        printf("\033[1;33m==============================================\033[0m\n");
+
+        while (fgets(line, sizeof(line), file))
+        {
+            line[strcspn(line, "\n")] = 0;
+            char *SeminarName = strtok(line, ",");
+            char *SeminarDate = strtok(NULL, ",");
+            char *Participants = strtok(NULL, ",");
+            char *Speaker = strtok(NULL, ",");
+
+            if (SeminarName && SeminarDate && Participants && Speaker)
+            {
+                // แสดงข้อมูลปกติ
+                printf("%-25s %-12s %-10s %-15s\n", SeminarName, SeminarDate, Participants, Speaker);
+            }
+        }
+
+        fclose(file);
+        printf("\033[1;33m==============================================\033[0m\n");
 }
-
 
 int clearBuffer(void)
 {
@@ -75,7 +81,7 @@ int check_keyword_to_show(char result[100][1024], char *keyword)
 {
     int Detected = 0;
     char line[1024];
-    FILE *file = fopen("celender_oldVersion.csv", "r");
+    FILE *file = fopen(CELENDER_FILE, "r");
     if (file == NULL)
     {
         printf("Error opening file\n");
@@ -174,8 +180,8 @@ void update_seminar()
 
     fclose(file);
     fclose(temp);
-    remove("celender.csv");
-    rename("temp.csv", "celender.csv");
+    remove(CELENDER_FILE);
+    rename("temp.csv", CELENDER_FILE);
 
     printf("Result %d updated successfully.\n", choice);
 
@@ -233,7 +239,7 @@ void delete_seminar()
 
     // ลบจาก CSV
     char line[1024];
-    FILE *file = fopen("celender.csv", "r");
+    FILE *file = fopen(CELENDER_FILE, "r");
     FILE *temp = fopen("temp.csv", "w");
     FILE *backup = fopen("backup.csv", "a");
 
@@ -271,8 +277,8 @@ void delete_seminar()
     fclose(temp);
     fclose(backup);
 
-    remove("celender.csv");
-    rename("temp.csv", "celender.csv");
+    remove(CELENDER_FILE);
+    rename("temp.csv", CELENDER_FILE);
 
     printf("Deleted %d seminar(s) successfully. Backup saved.\n", nChoices);
 }
@@ -311,7 +317,8 @@ void search_seminar()
         printf("\033[3;31mIncorrect format\033[0m");
     }
 }
-void Format_Date(){
+void Format_Date()
+{
     printf("\033[3;32mInput year is Christian Era (YYYY-MM-DD)\nExample:\033[3;33m2025-10-02\033[0m\n");
 }
 void add_seminar()
@@ -320,7 +327,7 @@ void add_seminar()
 
     int choice;
 
-    FILE *file = fopen("celender_oldVersion.csv", "a");
+    FILE *file = fopen(CELENDER_FILE, "a");
 
     if (file == NULL)
     {
@@ -397,55 +404,62 @@ int home_program()
         printf("Enter your choice(\033[1;36monly number\033[0m): ");
         scanf("%d", &choice);
         clearBuffer();
-        printf("\033[1;33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n");
-
-        switch (choice)
+        if (choice == 1 || choice == 2 || choice == 3 || choice == 4 || choice == 5 || choice == 0)
         {
-        case 1:
-            if (confirm())
-            {
-                int pined;
+            printf("\033[1;33m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\033[0m\n");
 
-                do
+            switch (choice)
+            {
+            case 1:
+                if (confirm())
                 {
-                    add_seminar();
-                    printf("Add again? (Pin \033[1;36m1\033[0m = yes, other = no): ");
-                    scanf("%d", &pined);
-                    clearBuffer();
+                    int pined;
 
-                } while (pined == 1);
+                    do
+                    {
+                        add_seminar();
+                        printf("Add again? (Pin \033[1;36m1\033[0m = yes, other = no): ");
+                        scanf("%d", &pined);
+                        clearBuffer();
+
+                    } while (pined == 1);
+                }
+                else
+                {
+                    printf("\033[3;31mPin incorrect.\033[3;36m Returning to menu.\033[0m\n");
+                }
+                printf("\033[3;34mBye,Go back to menu\033[0m");
+                break;
+
+            case 2:
+                search_seminar();
+                break;
+            case 3:
+                update_seminar();
+                break;
+            case 4:
+                delete_seminar();
+                break;
+            case 5 :
+                system("gcc " UNIT_TEST_FILE " -o unit_test_oldVersion && ./unit_test_oldVersion");
+                break;
+
+            case 0:
+                printf("Exit\n");
+                return 0;
             }
-            else
-            {
-                printf("\033[3;31mPin incorrect.\033[3;36m Returning to menu.\033[0m\n");
-            }
-            printf("\033[3;34mBye,Go back to menu\033[0m");
-            break;
-
-        case 2:
-            search_seminar();
-            break;
-        case 3:
-            update_seminar();
-            break;
-        case 4:
-            delete_seminar();
-            break;
-            /*case 5 :
-                 test_unittest();
-                 break;*/
-
-        case 0:
-            printf("Exit\n");
-            return 0;
-        default:
-            printf("Invalid choice, try again.\n");
+        }
+        else
+        {
+            printf("\033[3;31mIncorrect format, Please try again.\033[0m\n");
+            continue;
         }
     }
 }
-
+#ifdef UNIT_TEST
 int main()
 {
     home_program();
     return 0;
 }
+#endif
