@@ -10,13 +10,11 @@ void show_celender_onsite()
     FILE *file = fopen(CELENDER_ONSITE_FILE, "r");
     if (!file)
     {
-        printf(" ไม่สามารถเปิดไฟล์ %s ได้\n", CELENDER_ONSITE_FILE);
+        perror("Error opening celender_onsite.csv");
         return;
     }
 
-    char line[256];
-    char *token;
-
+    char line[512];
     printf("\n=============================================================================================\n");
     printf("                                    SEMINAR SCHEDULE TABLE                                     \n");
     printf("===============================================================================================\n");
@@ -24,33 +22,32 @@ void show_celender_onsite()
            "Room", "Start", "End", "Seminar Name", "Date", "Qty", "Speaker");
     printf("-----------------------------------------------------------------------------------------------\n");
 
-    // ข้ามบรรทัด header
+    // ข้าม header
     fgets(line, sizeof(line), file);
 
     while (fgets(line, sizeof(line), file))
     {
-        // ตัด \n ทิ้ง
-        line[strcspn(line, "\n")] = 0;
+        line[strcspn(line, "\r\n")] = 0;
 
-        // แยก token ตาม comma
-        char *room = strtok(line, ",");
-        char *start = strtok(NULL, ",");
-        char *end = strtok(NULL, ",");
-        char *seminar = strtok(NULL, ",");
-        char *date = strtok(NULL, ",");
+        char *Onsite_Room = strtok(line, ",");
+        char *Onsite_StartTime = strtok(NULL, ",");
+        char *Onsite_EndTime = strtok(NULL, ",");
+        char *Onsite_SeminarName = strtok(NULL, ",");
+        char *Onsite_SeminarDate = strtok(NULL, ",");
         char *participants = strtok(NULL, ",");
-        char *speaker = strtok(NULL, ",");
+        char *Onsite_Speaker = strtok(NULL, ",");
 
-        if (room && start && end && seminar && date && participants && speaker)
+        if (Onsite_Room && Onsite_StartTime && Onsite_EndTime && Onsite_SeminarName && Onsite_SeminarDate && participants && Onsite_Speaker)
         {
             printf("| %-6s | %-8s | %-8s | %-22s | %-12s | %-5s | %-12s |\n",
-                   room, start, end, seminar, date, participants, speaker);
+                   Onsite_Room, Onsite_StartTime, Onsite_EndTime, Onsite_SeminarName, Onsite_SeminarDate, participants, Onsite_Speaker);
         }
     }
 
     printf("-----------------------------------------------------------------------------------------------\n");
     fclose(file);
 }
+
 /*void show_celender_onsite(void)
 {
     char line[1024];
