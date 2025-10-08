@@ -15,12 +15,12 @@ void show_celender_onsite()
     }
 
     char line[512];
-    printf("\n=============================================================================================\n");
+    printf("\n======================================================================================================\n");
     printf("                                    SEMINAR SCHEDULE TABLE                                     \n");
-    printf("===============================================================================================\n");
-    printf("| %-6s | %-8s | %-8s | %-22s | %-12s | %-5s | %-12s |\n",
-           "Room", "Start", "End", "Seminar Name", "Date", "Qty", "Speaker");
-    printf("-----------------------------------------------------------------------------------------------\n");
+    printf("======================================================================================================\n");
+    printf("| %-6s | %-8s | %-8s | %-22s | %-12s | %-5s | %-20s\n",
+           "Room", "Start", "End", "Seminar Name", "Date", "Participants", "Speaker");
+    printf("------------------------------------------------------------------------------------------------------\n");
 
     // ข้าม header
     fgets(line, sizeof(line), file);
@@ -39,12 +39,12 @@ void show_celender_onsite()
 
         if (Onsite_Room && Onsite_StartTime && Onsite_EndTime && Onsite_SeminarName && Onsite_SeminarDate && participants && Onsite_Speaker)
         {
-            printf("| %-6s | %-8s | %-8s | %-22s | %-12s | %-5s | %-12s |\n",
+            printf("| %-6s | %-8s | %-8s | %-22s | %-12s | %-12s | %-12s |\n",
                    Onsite_Room, Onsite_StartTime, Onsite_EndTime, Onsite_SeminarName, Onsite_SeminarDate, participants, Onsite_Speaker);
         }
     }
 
-    printf("-----------------------------------------------------------------------------------------------\n");
+    printf("------------------------------------------------------------------------------------------------------\n");
     fclose(file);
 }
 
@@ -163,7 +163,7 @@ int check_keyword_to_show(char result[100][1024], char *keyword)
     fclose(file);
     return Detected;
 }
-void update_seminar()
+/*void update_seminar()
 {
     char result[100][1024];
     char *keyword;
@@ -494,7 +494,7 @@ void Onsite_add_seminar()
     free(Onsite_EndTime);
 }
 
-int add_seminar(FILE *input)
+/*int add_seminar(FILE *input)
 {
     char SeminarName[1024], SeminarDate[1024], Speaker[1024], Participants[1024];
 
