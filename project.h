@@ -23,5 +23,10 @@ void add_seminar_from_file(const char* input_filename);
 int save_seminar(const char* SeminarName, const char* SeminarDate, const char* Participants, const char* Speaker);
 int confirm(void);
 int home_program(void);
+int checkRoomAvailability(char *room, char *date, char *start, char *end);
+void Onsite_add_seminar(void);
+void show_celender_onsite(void);
+int checkRoomAvailability(char *room, char *date, char *start, char *end);
+
 
 #endif // PROJECT_H
