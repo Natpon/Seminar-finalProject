@@ -19,6 +19,7 @@ void delete_seminar(void);
 
 // แก้ declaration ให้ตรงกับ implementation
 int checkRoomAvailability(const char *room, const char *date, const char *startTime, const char *endTime);
+void Onsite_add_seminar(void);
 
 // ฟังก์ชันอื่น ๆ ที่คุณมีในโปรเจกต์
 // int someOtherFunction(...);
