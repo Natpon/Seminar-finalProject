@@ -10,8 +10,11 @@
 ## Main Features
 
 # Seminar Management System
-  How to compile ?
+  
+
+**How to compile ?**
 : gcc project.c -DRUN_MAIN -o project
+
 **How to out put?**
 : ./project
 
@@ -27,5 +30,4 @@ Room A  ,Room B ,Room C ,Room D ,Room E
 **จัดทำโดย**
 นายณัฐวัฒน์ กฤตธนเวท 
 รหัสประจำตัว: 68010372
-
 
