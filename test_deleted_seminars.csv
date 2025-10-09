@@ -1,0 +1,4 @@
+Room,Start,End,Name,Date,Participants,Speaker
+Room A,09:00,10:00,Python Basics,2025-10-10,10,John
+Room B,11:00,12:00,C Programming,2025-10-11,15,Alice
+Room C,13:00,14:00,Data Science,2025-10-12,20,Bob
