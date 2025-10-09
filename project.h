@@ -8,6 +8,8 @@
 // กำหนดค่าคงที่สำหรับไฟล์ CSV
 #define CELENDER_ONSITE_FILE "celender_onsite.csv"
 #define CELENDER_ONLINE_FILE "celender_online.csv"
+#define NUM_ROOMS 5
+extern const char *ROOMS[];
 
 // ประกาศฟังก์ชันทั้งหมดที่ใช้ใน project.c
 
@@ -19,6 +21,8 @@ void delete_seminar(void);
 
 // แก้ declaration ให้ตรงกับ implementation
 int checkRoomAvailability(const char *room, const char *date, const char *startTime, const char *endTime);
+int timeToMinutes(const char *timeStr);
+
 void Onsite_add_seminar(void);
 
 // ฟังก์ชันอื่น ๆ ที่คุณมีในโปรเจกต์

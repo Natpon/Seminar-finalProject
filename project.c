@@ -376,51 +376,167 @@ int timeToMinutes(const char *timeStr)
     return hours * 60 + minutes;
 }
 
-int checkRoomAvailability(const char *room, const char *Onsite_date, const char *Onsite_startTime, const char *Onsite_endTime)
+int checkRoomAvailability(const char *room, const char *seminarDate, const char *startTime, const char *endTime)
 {
     FILE *file = fopen(CELENDER_ONSITE_FILE, "r");
     if (!file)
-        return 1; // ถ้าไฟล์ยังไม่มี ถือว่าห้องว่าง
+        return 1; // If file doesn't exist yet, the room is considered available
 
     char line[256];
     while (fgets(line, sizeof(line), file))
     {
-        char existingName[100], existingRoom[50], existingSpeaker[50], existingDate[20], existingStart[10], existingEnd[10];
-        sscanf(line, "%99[^,],%49[^,],%49[^,],%19[^,],%9[^,],%9[^,\n]",
-               existingName, existingRoom, existingSpeaker, existingDate, existingStart, existingEnd);
+        char existingRoom[50], existingStart[10], existingEnd[10], existingName[100];
+        char existingDate[20], existingParticipants[10], existingSpeaker[50];
 
-        // ตรวจว่าห้องและวันเดียวกันไหม
-        if (strcmp(room, existingRoom) == 0 && strcmp(Onsite_date, existingDate) == 0)
+        // Read columns in correct order
+        sscanf(line, "%49[^,],%9[^,],%9[^,],%99[^,],%19[^,],%9[^,],%49[^,\n]",
+               existingRoom, existingStart, existingEnd, existingName,
+               existingDate, existingParticipants, existingSpeaker);
+
+        // Check same room and same date
+        if (strcmp(existingRoom, room) == 0 && strcmp(existingDate, seminarDate) == 0)
         {
-            int newStart = timeToMinutes(Onsite_startTime);
-            int newEnd = timeToMinutes(Onsite_endTime);
-            int existStart = timeToMinutes(existingStart);
-            int existEnd = timeToMinutes(existingEnd);
+            int sStartMin = timeToMinutes(existingStart);
+            int sEndMin = timeToMinutes(existingEnd);
+            int newStartMin = timeToMinutes(startTime);
+            int newEndMin = timeToMinutes(endTime);
 
-            // ถ้าเวลาทับซ้อนกัน
-            if (!(newEnd <= existStart || newStart >= existEnd))
+            // Check for overlapping time
+            if (!(newEndMin <= sStartMin || newStartMin >= sEndMin))
             {
+                printf("This room is already booked between %s - %s.\n", existingStart, existingEnd);
                 fclose(file);
-                return 0; 
+                return 0; // Room not available
             }
         }
     }
 
     fclose(file);
-    return 1; // ว่าง
+    return 1; // Room available
+}
+void Onsite_update_seminar()
+{
+    char *keyword;
+    printf("Input seminar name to update: ");
+    keyword = Dynamic();
+    if (!keyword) return;
+
+    FILE *file = fopen(CELENDER_ONSITE_FILE, "r");
+    FILE *temp = fopen("temp.csv", "w");
+    if (!file || !temp)
+    {
+        printf("Error opening file\n");
+        free(keyword);
+        return;
+    }
+
+    char line[512];
+    // copy header
+    if (fgets(line, sizeof(line), file))
+        fprintf(temp, "%s", line);
+
+    int found = 0;
+    while (fgets(line, sizeof(line), file))
+    {
+        line[strcspn(line, "\r\n")] = 0;
+
+        char existingRoom[50], existingStart[10], existingEnd[10], existingName[100], existingDate[20], existingParticipants[10], existingSpeaker[50];
+        sscanf(line, "%49[^,], %9[^,], %9[^,], %99[^,], %19[^,], %9[^,], %49[^\n]",
+               existingRoom, existingStart, existingEnd, existingName, existingDate, existingParticipants, existingSpeaker);
+
+        if (strcmp(existingName, keyword) == 0)
+        {
+            found = 1;
+            printf("Updating seminar: %s\n", existingName);
+
+            char *newName = NULL, *newSpeaker = NULL, *newDate = NULL, *newStart = NULL, *newEnd = NULL, *newParticipants = NULL;
+
+            printf("New Name (leave empty to keep current): ");
+            newName = Dynamic();
+            if (!newName || strlen(newName) == 0)
+            {
+                free(newName);
+                newName = strdup(existingName);
+            }
+
+            printf("New Speaker (leave empty to keep current): ");
+            newSpeaker = Dynamic();
+            if (!newSpeaker || strlen(newSpeaker) == 0)
+            {
+                free(newSpeaker);
+                newSpeaker = strdup(existingSpeaker);
+            }
+            printf("New Participants (leave empty to keep current): ");
+            newParticipants = Dynamic();
+            if (!newParticipants || strlen(newParticipants) == 0)
+            {
+                free(newParticipants);
+                newParticipants = strdup(existingParticipants);
+            }
+
+            /*printf("New Date (leave empty to keep current): ");
+            newDate = Dynamic();
+            if (!newDate || strlen(newDate) == 0)
+            {
+                free(newDate);
+                newDate = strdup(existingDate);
+            }
+
+            printf("New Start Time (leave empty to keep current): ");
+            newStart = Dynamic();
+            if (!newStart || strlen(newStart) == 0)
+            {
+                free(newStart);
+                newStart = strdup(existingStart);
+            }
+
+            printf("New End Time (leave empty to keep current): ");
+            newEnd = Dynamic();
+            if (!newEnd || strlen(newEnd) == 0)
+            {
+                free(newEnd);
+                newEnd = strdup(existingEnd);
+            }*/
+
+            fprintf(temp, "%s,%s,%s,%s,%s,%s,%s\n",
+                    existingRoom, existingStart, existingEnd, newName, existingDate, newParticipants, newSpeaker);
+
+            free(newName);
+            free(newSpeaker);
+            free(newDate);
+            free(newStart);
+            free(newEnd);
+            free(newParticipants);
+        }
+        else
+        {
+            fprintf(temp, "%s\n", line);
+        }
+    }
+
+    fclose(file);
+    fclose(temp);
+
+    remove(CELENDER_ONSITE_FILE);
+    rename("temp.csv", CELENDER_ONSITE_FILE);
+
+    if (!found) printf("Seminar not found.\n");
+    else printf("Seminar updated successfully.\n");
+
+    free(keyword);
 }
 
 void Onsite_add_seminar()
 {
-    char *Onsite_date, *Onsite_startTime, *Onsite_endTime, *Onsite_seminarName, *Onsite_speaker;
+    char *seminarDate, *startTime, *endTime, *seminarName, *speaker;
     int roomChoice;
 
-    printf("=== Choose room ===\n");
+    printf("=== Choose a Room ===\n");
     for (int i = 0; i < NUM_ROOMS; i++)
     {
         printf("%d. %s\n", i + 1, ROOMS[i]);
     }
-    printf("Room (1-%d): ", NUM_ROOMS);
+    printf("Select room (1-%d): ", NUM_ROOMS);
     scanf("%d", &roomChoice);
     clearBuffer();
 
@@ -432,48 +548,54 @@ void Onsite_add_seminar()
 
     const char *room = ROOMS[roomChoice - 1];
 
-    printf("Name of seminar: ");
-    Onsite_seminarName = Dynamic();
+    printf("Seminar Name: ");
+    seminarName = Dynamic();
 
     printf("Speaker: ");
-    Onsite_speaker = Dynamic();
+    speaker = Dynamic();
 
     printf("Date (YYYY-MM-DD): ");
-    Onsite_date = Dynamic();
+    seminarDate = Dynamic();
 
-    printf("Start time (HH:MM): ");
-    Onsite_startTime = Dynamic();
+    printf("Start Time (HH:MM): ");
+    startTime = Dynamic();
 
-    printf("End time (HH:MM): ");
-    Onsite_endTime = Dynamic();
+    printf("End Time (HH:MM): ");
+    endTime = Dynamic();
 
-    // ตรวจสอบห้องว่าง
-    if (!checkRoomAvailability(room, Onsite_date, Onsite_startTime, Onsite_endTime))
+    // Check room availability
+    if (!checkRoomAvailability(room, seminarDate, startTime, endTime))
     {
-        printf("room %s is busy\n", room);
+        printf(" Cannot add seminar: this room is busy during that time.\n");
+        free(seminarName);
+        free(speaker);
+        free(seminarDate);
+        free(startTime);
+        free(endTime);
         return;
     }
 
-    // ห้องว่าง → บันทึกลงไฟล์
+    // Room is available → save record
     FILE *file = fopen(CELENDER_ONSITE_FILE, "a");
     if (!file)
     {
-        printf("cannot open file\n");
+        printf("Error: cannot open file for writing.\n");
         return;
     }
 
-    fprintf(file, "%s,%s,%s,%s,%s,%s\n", room, Onsite_startTime, Onsite_endTime, Onsite_seminarName, Onsite_date, Onsite_speaker);    
+    fprintf(file, "%s,%s,%s,%s,%s,%s\n",
+            room, startTime, endTime, seminarName, seminarDate, speaker);
     fclose(file);
 
-    printf("record already\n");
+    printf(" Record added successfully.\n");
 
-    
-    free(Onsite_seminarName);
-    free(Onsite_speaker);
-    free(Onsite_date);
-    free(Onsite_startTime);
-    free(Onsite_endTime);
+    free(seminarName);
+    free(speaker);
+    free(seminarDate);
+    free(startTime);
+    free(endTime);
 }
+
 
 /*int add_seminar(FILE *input)
 {
@@ -625,12 +747,13 @@ int home_program()
         }
         else if (choice == 2)
         {
-            // Update_seminar_onsite();
+            Onsite_update_seminar();
         }
         else if (choice == 3)
         {
             // Delete_seminar_onsite();
         }
+        
         else
         {
             printf("\033[3;31mIncorrect format, Please try again.\033[0m\n");
@@ -664,13 +787,16 @@ int home_program()
         else{
             printf("\033[3;31mIncorrect format, Please try again.\033[0m\n");
             return 0;
-        }
+        }*/
+    else if(choice == 4){
+        system("gcc test_project.c project.c -o test.exe && test.exe");
+        return 0;        
     }
     else{
         printf("\033[3;31mIncorrect format, Please try again.\033[0m\n");
     }
 
-    printf("\n\033[1;33m=========\033[1;36mPLEASE_SELECT\033[1;33m==========\033[0m\n");*/
+    printf("\n\033[1;33m=========\033[1;36mPLEASE_SELECT\033[1;33m==========\033[0m\n");
 }
 int logIn()
 {
