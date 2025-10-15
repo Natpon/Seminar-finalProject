@@ -255,7 +255,7 @@ void delete_seminar(const char *fileName)
 
     FILE *file = fopen(fileName, "r");
     FILE *temp = fopen("temp.csv", "w");
-    FILE *history = fopen("deleted_seminars_real.csv", "a"); // เก็บ history
+    FILE *history = fopen("deleted_seminar_real.csv", "a"); // เก็บ history
     if (!file || !temp || !history)
     {
         printf("Cannot open file.\n");
@@ -304,7 +304,7 @@ void show_deleted_history()
     printf("Enter keyword to search in deleted seminars (leave empty to show all): ");
     keyword = readLine();
 
-    FILE *file = fopen("deleted_seminars_real.csv", "r");
+    FILE *file = fopen("deleted_seminar_real.csv", "r");
     if (!file)
     {
         printf("No deleted seminar history.\n");
@@ -462,13 +462,11 @@ void home_program()
         }
         else if (choice == 2)
         {
-            system("gcc -D RUN_UNIT_TEST UnitTest.c project.c -o UnitTest.exe && UnitTest.exe");
-            return;
+            system("gcc -D RUN_UNIT_TEST UnitTest.c project.c -o UnitTest.exe && ./UnitTest.exe");
         }
         else if (choice == 3)
         {
-            system("gcc -D RUN_E2E test_deleted_history.c -o test_deleted_history.exe && test_deleted_history.exe");
-            return;
+            system("gcc -D RUN_E2E test_deleted_history.c -o test_deleted_history.exe && ./test_deleted_history.exe");
         }
         else if (choice == 0)
             break;

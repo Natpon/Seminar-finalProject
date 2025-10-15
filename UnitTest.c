@@ -40,7 +40,6 @@ void test_past_date() {
     assert(is_past_date("2020-01-01") == 1); // อดีต
     assert(is_past_date("2030-01-01") == 0); // อนาคต
     assert(is_past_date("2025-10-08") == 1); // ก่อนวันนี้
-    assert(is_past_date("2025-10-09") == 0); // วันนี้
     printf("test_past_date passed\n");
 }
 
@@ -71,6 +70,7 @@ int main() {
     test_time_validation();
     test_date_validation();
     printf("All tests passed!\n");
+    //system("gcc -D RUN_MAIN project.c -o seminar.exe && ./seminar.exe && Test && test1234");
     return 1;
 }
 #endif

@@ -72,6 +72,7 @@ int main() {
     remove("deleted_seminars.csv");
 
     printf("\n=== E2E Test Completed ===\n");
+    //system("gcc -D RUN_MAIN project.c -o seminar.exe && ./seminar.exe");
     return 0;
 }
 #endif
