@@ -443,12 +443,12 @@ void home_program()
     while (1)
     {
         show_seminars(CELENDER_ONSITE_FILE);
-        printf("1. Manage onsite seminar\n2. Unit_Test\n3. E2E_test\n0. Exit\nChoice: ");
+        printf("1. Manage onsite seminar\n2. Unit_Test\n3. E2E_test\n0. Exit\nChoice(number only): ");
         scanf("%d", &choice);
         clearBuffer();
         if (choice == 1)
         {
-            printf("1.Add \n2.Update \n3.Delete\n4.Search Deleted History\nChoice: ");
+            printf("1.Add \n2.Update \n3.Delete\n4.Search Deleted History\nChoice(number only): ");
             scanf("%d", &choice);
             clearBuffer();
             if (choice == 1)
