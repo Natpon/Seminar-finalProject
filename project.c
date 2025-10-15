@@ -255,7 +255,7 @@ void delete_seminar(const char *fileName)
 
     FILE *file = fopen(fileName, "r");
     FILE *temp = fopen("temp.csv", "w");
-    FILE *history = fopen("deleted_seminars.csv", "a"); // เก็บ history
+    FILE *history = fopen("deleted_seminars_real.csv", "a"); // เก็บ history
     if (!file || !temp || !history)
     {
         printf("Cannot open file.\n");
@@ -304,7 +304,7 @@ void show_deleted_history()
     printf("Enter keyword to search in deleted seminars (leave empty to show all): ");
     keyword = readLine();
 
-    FILE *file = fopen("deleted_seminars.csv", "r");
+    FILE *file = fopen("deleted_seminars_real.csv", "r");
     if (!file)
     {
         printf("No deleted seminar history.\n");

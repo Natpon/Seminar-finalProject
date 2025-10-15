@@ -1,0 +1,21 @@
+Room,Start,End,Seminar Name,Date,Participants,Speaker
+Room A,09:00,10:00,Introduction to C,2025-10-01,25,Dr. Smith
+Room B,11:00,12:30,Advanced Python,2025-10-02,30,Ms. Johnson
+Room C,14:00,15:30,Data Science Basics,2025-10-03,20,Mr. Lee
+Room D,10:00,11:00,Machine Learning 101,2025-10-04,28,Dr. Kim
+Room E,13:00,14:00,Cybersecurity Essentials,2025-10-05,32,Ms. Brown
+Room A,15:00,16:00,Networking Fundamentals,2025-10-06,18,Dr. Adams
+Room B,09:30,10:30,JavaScript for Beginners,2025-10-07,22,Ms. Clark
+Room C,11:00,12:00,AI Ethics,2025-10-08,26,Mr. Wang
+Room D,14:30,15:30,Cloud Computing 101,2025-10-09,24,Dr. Lopez
+Room E,16:00,17:00,DevOps Introduction,2025-10-10,20,Ms. Davis
+Room A,08:30,09:30,HTML & CSS Basics,2025-10-11,15,Mr. Patel
+Room B,10:00,11:30,Python for Data Analysis,2025-10-12,30,Dr. Nguyen
+Room C,12:00,13:00,SQL Essentials,2025-10-13,28,Ms. Martinez
+Room D,13:30,14:30,Blockchain Overview,2025-10-14,18,Mr. Hernandez
+Room E,15:00,16:30,IoT Fundamentals,2025-10-15,25,Dr. Wilson
+Room A,09:00,10:30,ReactJS Basics,2025-10-16,20,Ms. Lopez
+Room B,11:00,12:00,Angular for Beginners,2025-10-17,22,Mr. Kim
+Room C,13:00,14:00,Introduction to Rust,2025-10-18,18,Dr. Thomas
+Room D,14:30,15:30,Kubernetes Essentials,2025-10-19,24,Ms. Garcia
+Room E,16:00,17:00,Penetration Testing Basics,2025-10-20,28,Mr. Lee
